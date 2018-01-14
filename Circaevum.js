@@ -491,7 +491,7 @@ function Plot(fromCoin,toCoin,span,coinColor,depth){
 	}
 	request.send();
 	/*
-	var arr_from_json ='https://min-api.cryptocompare.com/data/histominute?fsym=BTC&tsym=USD&limit=60&aggregate=3&e=CCCAGG';
+	var arr_from_json ='https://min-api.cryptocompare.com/data/histominute?fsym=BTC&tsym=USD&limit=60&aggregate=3&e=EtherDelta';
 	var y;
 	$.ajax({
 		method: 'GET',
@@ -521,7 +521,7 @@ function Candle(xAxis,open,close,high,low,height,depth,scaler,max){
 	}
 	
 	var thinLine = new THREE.Line(geometry1, material);
-	thinLine.position.set(-30/scaler,0,-14/scaler);
+	thinLine.position.set(-30/scaler,-(high-(high-low)/2)/scaler/max*10,-14/scaler);
 	scene.add(thinLine);
 	
 	var geometry2 = new THREE.Geometry();
@@ -535,7 +535,7 @@ function Candle(xAxis,open,close,high,low,height,depth,scaler,max){
 	material.linewidth=20;
 	
 	var thickLine = new THREE.Line(geometry2, material);
-	thickLine.position.set(-30/scaler,0,-14/scaler);
+	thickLine.position.set(-30/scaler,-(open-(open-close)/2)/scaler/max*10,-14/scaler);
 	scene.add(thickLine);
 }
 function closeFrame(SD, ED, color_of_day) {
