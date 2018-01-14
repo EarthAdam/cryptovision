@@ -20,6 +20,8 @@
 		<script src="text/threex.text.js"></script>
 		<script src="text/gentilis_bold.typeface.js"></script>
 		
+		
+		<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
 		<script>
 		var camera, scene, renderer, controls;
 		var geometry, material, mesh;
@@ -35,7 +37,8 @@
 				container3d = document.createElement( 'div' );
 				document.body.appendChild( container3d );
 				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
-				camera.position.z = 250;
+				camera.position.z = 600;
+				camera.position.y = 400;
 				// scene
 				scene = new THREE.Scene();
 				scene.background = new THREE.Color( 0xff0000 );
@@ -46,12 +49,26 @@
 				camera.add( pointLight );
 				scene.add( camera );
 				
-				LAMDENroadmap();
+				Plot('BTC','USD','day','gold',80);
+				Plot('ETH','USD','day','gray',100);
+				Plot('XRP','USD','day',0x40a0e0,120);
+				Plot('BCH','USD','day',0x00aa00,140);
+				Plot('ADA','USD','day',0x40e0d0,160);
+				Plot('NEO','USD','day',0x00ff00,180);
+				
+				Plot('BTC','USD','hour','gold',80);
+				Plot('ETH','USD','hour','gray',100);
+				Plot('XRP','USD','hour',0x40a0e0,120);
+				Plot('BCH','USD','hour',0x00aa00,140);
+				Plot('ADA','USD','hour',0x40e0d0,160);
+				Plot('NEO','USD','hour',0x00ff00,180);
+				//Plot('TRX','USD','green',140);
+				//Plot('XRB','USD','red',160);
 				
 				// CREATE STARFIELD AROUND SCENE
 				var geometry  = new THREE.SphereGeometry(1000, 32, 32);
 				var material  = new THREE.MeshLambertMaterial();
-				material.map   = THREE.ImageUtils.loadTexture('img/bkg.png');			//eso_28.png
+				material.map   = THREE.ImageUtils.loadTexture('img/bkg.jpg');			//eso_28.png
 				material.fog = false;
 				material.side  = THREE.DoubleSide;
 				stars  = new THREE.Mesh(geometry, material);
@@ -62,8 +79,8 @@
 				// stars.rotation.y = Math.PI/6;
 				scene.add(stars);
 				
-				triangleGrid();
-				LAMDENlogo();
+				//triangleGrid();
+				//LAMDENlogo();
 				
 				//
 				renderer = new THREE.WebGLRenderer({ alpha: true });
@@ -95,9 +112,7 @@
 			function render() {
 				camera.position.x += ( mouseX - camera.position.x ) * .05;
 				camera.position.y += ( - mouseY - camera.position.y ) * .05;
-				for (i=0;i<=4;i++){
-					hourSet[i].quaternion.copy( camera.quaternion );
-				}
+			
 				camera.lookAt( scene.position );
 				renderer.render( scene, camera );
 			}

@@ -442,28 +442,65 @@ function spiralPlot(SD, title, colour, y) {
 	// NAME.Text(start, colour,  radius*0.75*Math.sin(start*360/24/60*Math.PI/180-Math.PI),radius*0.75*Math.cos(start*360/24/60*Math.PI/180+Math.PI),-(start*scrunch)/24/60);
 	
 }
-function Plot(){	
-	var geometry = new THREE.Geometry();
-	y = [2,5,8,1,5,3,7,10,1,3,2,4,3,2,2,1,3,2,5,6,2,1,4,6,9,7,3,7,7,7,7,7,7,7,7,7,7,7,7,1,2,3,4,5,6,7,8,9,8,7,6,5,4,3,2,1,2,3,4,3,2,1,2,3,4,5,6,5,4,3,2];
-	var start = y[0];
-	var end = y.length;
-	var scaler = 100;
-	for (i=start;i<=end;i++){
-		geometry.vertices.push(new THREE.Vector3(i/scaler,y[i]/scaler,0));
+function Plot(fromCoin,toCoin,span,coinColor,depth){	
+	var y=[];
+	var height;
+	var request = new XMLHttpRequest();
+	request.open('GET','https://min-api.cryptocompare.com/data/histo'+span+'?fsym='+fromCoin+'&tsym='+toCoin+'&limit=60&aggregate=3&e=CCCAGG');
+	request.onload = function(){
+		var data = JSON.parse(request.responseText);
+		console.log(data.Data.length);
+		console.log(data.Data);
+		for (i=0;i<data.Data.length;i++){
+			y[i] = data.Data[i].close;
+			//console.log(y[i]);
+		}
+		console.log(y);
+		var geometry = new THREE.Geometry();var start = y[0];
+		var end = y.length;
+		console.log(Math.min.apply(Math,y));
+		var scaler = 0.1;
+		if(span == 'day')
+			height = -120;
+		else if(span=='hour')
+			height = 0;
+		else if(span=='minute')
+			height = 120;
+		for (j=0;j<y.length;j++){
+			geometry.vertices.push(new THREE.Vector3(j/scaler,y[j]/scaler/Math.max.apply(Math,y)*10+height,depth));
+			
+		}
+		var material = new THREE.LineBasicMaterial({color: coinColor });
+		var line = new THREE.Line(geometry, material);
+		line.position.set(-30/scaler,0,-14/scaler);
+		scene.add(line);
+		
+		var geometry2 = new THREE.Geometry();
+		geometry2.vertices.push(new THREE.Vector3((end+1)/scaler,0+height,depth));
+		geometry2.vertices.push(new THREE.Vector3(0,0+height,depth));
+		geometry2.vertices.push(new THREE.Vector3(0,11/scaler+height,depth));
+		geometry2.vertices.push(new THREE.Vector3((end+1)/scaler,11/scaler+height,depth));
+		geometry2.vertices.push(new THREE.Vector3((end+1)/scaler,0+height,depth));
+		var material2 = new THREE.LineBasicMaterial({color: 'white' });
+		var line2 = new THREE.Line(geometry2, material2);
+		line2.position.set(-30/scaler,0,-14/scaler);
+		scene.add(line2);
 	}
-	var material = new THREE.LineBasicMaterial({color: 'gold' });
-	var line = new THREE.Line(geometry, material);
-	line.position.set(-2/scaler,0,-14/scaler);
-	scene.add(line);
+	request.send();
+	/*
+	var arr_from_json ='https://min-api.cryptocompare.com/data/histominute?fsym=BTC&tsym=USD&limit=60&aggregate=3&e=CCCAGG';
+	var y;
+	$.ajax({
+		method: 'GET',
+		url: arr_from_json,
+	  }).done(function(data) {
+		  for (i=0;i<=data.length;i++){
+			  y[i] = data[i].close;
+		  }
+	  });
 	
-	var geometry2 = new THREE.Geometry();
-	geometry2.vertices.push(new THREE.Vector3((end+1)/scaler,0,0));
-	geometry2.vertices.push(new THREE.Vector3(0,0,0));
-	geometry2.vertices.push(new THREE.Vector3(0,11/scaler,0));
-	var material2 = new THREE.LineBasicMaterial({color: 'white' });
-	var line2 = new THREE.Line(geometry2, material2);
-	line2.position.set(-2/scaler,0,-14/scaler);
-	scene.add(line2);
+	*/
+	
 }
 function closeFrame(SD, ED, color_of_day) {
 	var start = breakupDate(SD);
