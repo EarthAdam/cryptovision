@@ -2,7 +2,7 @@
 <html lang="eng">
 	<head>
 	<meta charset="utf-8"/>
-		<title>Lamden Roadmap</title>
+		<title>Crypto Vision</title>
 	</head>
 	<body style="background-color:white;">
 	
@@ -37,7 +37,7 @@
 				container3d = document.createElement( 'div' );
 				document.body.appendChild( container3d );
 				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
-				camera.position.z = 600;
+				camera.position.z = 400;
 				camera.position.y = 400;
 				// scene
 				scene = new THREE.Scene();
@@ -55,6 +55,7 @@
 				Plot('BCH','USD','day',0x00aa00,140);
 				Plot('ADA','USD','day',0x40e0d0,160);
 				Plot('NEO','USD','day',0x00ff00,180);
+				Plot('TAU','BTC','day',0xff00ff,200);
 				
 				Plot('BTC','USD','hour','gold',80);
 				Plot('ETH','USD','hour','gray',100);
@@ -62,6 +63,7 @@
 				Plot('BCH','USD','hour',0x00aa00,140);
 				Plot('ADA','USD','hour',0x40e0d0,160);
 				Plot('NEO','USD','hour',0x00ff00,180);
+				Plot('TAU','BTC','hour',0xff00ff,200);
 				//Plot('TRX','USD','green',140);
 				//Plot('XRB','USD','red',160);
 				

@@ -451,14 +451,6 @@ function Plot(fromCoin,toCoin,span,coinColor,depth){
 		var data = JSON.parse(request.responseText);
 		console.log(data.Data.length);
 		console.log(data.Data);
-		for (i=0;i<data.Data.length;i++){
-			y[i] = data.Data[i].close;
-			//console.log(y[i]);
-		}
-		console.log(y);
-		var geometry = new THREE.Geometry();var start = y[0];
-		var end = y.length;
-		console.log(Math.min.apply(Math,y));
 		var scaler = 0.1;
 		if(span == 'day')
 			height = -120;
@@ -466,6 +458,17 @@ function Plot(fromCoin,toCoin,span,coinColor,depth){
 			height = 0;
 		else if(span=='minute')
 			height = 120;
+		for (i=0;i<data.Data.length;i++){
+			y[i] = data.Data[i].close;
+			Candle(i/scaler,data.Data[i].open,data.Data[i].close,data.Data[i].high,data.Data[i].low,height,depth,scaler,Math.max.apply(Math,y));
+		}
+		console.log(y);
+		var geometry = new THREE.Geometry();
+		var start = y[0];
+		var end = y.length;
+		console.log(Math.min.apply(Math,y));
+
+
 		for (j=0;j<y.length;j++){
 			geometry.vertices.push(new THREE.Vector3(j/scaler,y[j]/scaler/Math.max.apply(Math,y)*10+height,depth));
 			
@@ -501,6 +504,39 @@ function Plot(fromCoin,toCoin,span,coinColor,depth){
 	
 	*/
 	
+}
+
+function Candle(xAxis,open,close,high,low,height,depth,scaler,max){
+	var geometry1 = new THREE.Geometry();
+	geometry1.vertices.push(new THREE.Vector3(xAxis,low/scaler/max*10+height,depth));
+	geometry1.vertices.push(new THREE.Vector3(xAxis,high/scaler/max*10+height,depth));
+	var material = new THREE.LineBasicMaterial( {
+		color: 0x00ff00,
+		linewidth: 5,
+		linecap: 'round', //ignored by WebGLRenderer
+		linejoin:  'round' //ignored by WebGLRenderer
+	} );
+	if(open>=close){
+		material.color = new THREE.Color(0xff0000);
+	}
+	
+	var thinLine = new THREE.Line(geometry1, material);
+	thinLine.position.set(-30/scaler,0,-14/scaler);
+	scene.add(thinLine);
+	
+	var geometry2 = new THREE.Geometry();
+	geometry2.vertices.push(new THREE.Vector3(xAxis,open/scaler/max*10+height,depth));
+	geometry2.vertices.push(new THREE.Vector3(xAxis,close/scaler/max*10+height,depth));
+	geometry2.vertices.push(new THREE.Vector3(xAxis+2,close/scaler/max*10+height,depth));
+	geometry2.vertices.push(new THREE.Vector3(xAxis+2,open/scaler/max*10+height,depth));
+	geometry2.vertices.push(new THREE.Vector3(xAxis-2,open/scaler/max*10+height,depth));
+	geometry2.vertices.push(new THREE.Vector3(xAxis-2,close/scaler/max*10+height,depth));
+	geometry2.vertices.push(new THREE.Vector3(xAxis,close/scaler/max*10+height,depth));
+	material.linewidth=20;
+	
+	var thickLine = new THREE.Line(geometry2, material);
+	thickLine.position.set(-30/scaler,0,-14/scaler);
+	scene.add(thickLine);
 }
 function closeFrame(SD, ED, color_of_day) {
 	var start = breakupDate(SD);
