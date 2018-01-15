@@ -414,35 +414,59 @@ function Plot(fromCoin,toCoin,span,coinColor,depth,spot){
 	*/
 	
 }
-function Axes(yPosition,title){
+function HourAxes(yPosition){
 	var scaler = 0.1;
+	for(k=0;k<=60;k++){
+		var today = new Date();
+		today.setHours(new Date().getHours()-k);
+		if(k%6==0)
+			COIN.Text(today.getHours(),'white',5);
+		else
+			COIN.Text(today.getHours(),'white',3);
+		coin.position.set((30-k)/scaler,yPosition/scaler,40);
+		if((new Date().getHours()-k)%24==0){
+			COIN.Text(MonthArray[today.getMonth()]+' '+today.getDate(),'white',5);
+			coin.position.set((30-k)/scaler,(yPosition-1)/scaler,40);
+		}
+	}
+	COIN.Text('Hours','white',10);
+	coin.position.set(-34/scaler,(yPosition+3)/scaler,40);
+	COIN.Text('Hours','white',10);
+	coin.position.set(34/scaler,(yPosition+3)/scaler,40);
+	
+	var today = new Date();
+	COIN.Text(today.getHours()+':'+today.getMinutes(),'white',5);
+	coin.position.set(30/scaler,(yPosition-1)/scaler,40);
+	
+}
+
+function DayAxes(yPosition){
+	var scaler = 0.1;
+	var today = new Date();
 	for(k=0;k<=60;k++){
 		if(k%10==0)
 			COIN.Text(k,'white',5);
 		else
 			COIN.Text(k,'white',3);
 		coin.position.set((30-k)/scaler,yPosition/scaler,40);
-		xAxisSet[k];
 	}
-	COIN.Text(title,'white',10);
+	COIN.Text('Days','white',10);
 	coin.position.set(-34/scaler,(yPosition+3)/scaler,40);
-	xAxisSet[61];
-	COIN.Text(title,'white',10);
+	COIN.Text('Days','white',10);
 	coin.position.set(34/scaler,(yPosition+3)/scaler,40);
-	xAxisSet[62];
 	
-	var today = new Date();
+	
 	COIN.Text(MonthArray[today.getMonth()]+' '+today.getDate(),'white',5);
 	coin.position.set(30/scaler,(yPosition-1)/scaler,40);
-	xAxisSet[63];
 	today.setDate(today.getDate()-30);
 	COIN.Text(MonthArray[today.getMonth()]+' '+today.getDate(),'white',5);
 	coin.position.set(0,(yPosition-1)/scaler,40);
-	xAxisSet[63];
 	today.setDate(today.getDate()-30);
 	COIN.Text(MonthArray[today.getMonth()]+' '+today.getDate(),'white',5);
 	coin.position.set(-30/scaler,(yPosition-1)/scaler,40);
-	xAxisSet[63];
+	
+
+	
 }
 COIN.Text	= function(text, cColor, size,options){
 options	= options || {

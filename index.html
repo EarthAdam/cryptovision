@@ -45,7 +45,7 @@
 				//controls = new THREE.OrbitControls( camera );
 				var ambientLight = new THREE.AmbientLight( 0xcccccc, 1 );
 				scene.add( ambientLight );
-				var pointLight = new THREE.PointLight( 0xffffff, 0.8 );
+				var pointLight = new THREE.PointLight( 0xcccccc, 0.8 );
 				camera.add( pointLight );
 				scene.add( camera );
 				
@@ -64,15 +64,15 @@
 				Plot('ADA','USD','hour',0x40e0d0,160);
 				Plot('NEO','USD','hour',0x00ff00,180);
 				
-				Axes(-1,'Hours');
-				Axes(-16,'Days');
+				HourAxes(-1);
+				DayAxes(-16);
 				//Plot('TRX','USD','green',140);
 				//Plot('XRB','USD','red',160);
 				
 				// CREATE STARFIELD AROUND SCENE
 				var geometry  = new THREE.SphereGeometry(1000, 32, 32);
 				var material  = new THREE.MeshLambertMaterial();
-				material.map   = THREE.ImageUtils.loadTexture('img/bkg.jpg');			//eso_28.png
+				material.map   = THREE.ImageUtils.loadTexture('img/bkg2.jpg');			//eso_28.png
 				material.fog = false;
 				material.side  = THREE.DoubleSide;
 				stars  = new THREE.Mesh(geometry, material);
