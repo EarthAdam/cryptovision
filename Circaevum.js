@@ -12,6 +12,7 @@ var monthText = [];
 var houseText = [];
 hourSet = [];
 coinSet = [];
+xAxisSet = [];
 var daySet = [];
 var mox = [];
 var moy = [];
@@ -21,6 +22,7 @@ nameArray = [];
 var hourArray=[];
 
 var monthNum = 0;
+var MonthArray = ['January','February','March','April','May','June','July','August','September','October','November','December','January','February','March','April','May','June','July','August','September','October','November','December','January','February','March','April','May','June','July','August','September','October','November','December'];
 
 function GridXZ(){
 	var gridXZ = new THREE.GridHelper(1000,50);
@@ -355,11 +357,11 @@ function Plot(fromCoin,toCoin,span,coinColor,depth,spot){
 		console.log(data.Data);
 		var scaler = 0.1;
 		if(span == 'day')
-			height = -140;
+			height = -150;
 		else if(span=='hour')
 			height = 0;
 		else if(span=='minute')
-			height = 140;
+			height = 150;
 		for (i=0;i<data.Data.length;i++){
 			y[i] = data.Data[i].close;
 			Candle(i/scaler,data.Data[i].open,data.Data[i].close,data.Data[i].high,data.Data[i].low,height,depth,scaler,Math.max.apply(Math,y));
@@ -391,9 +393,10 @@ function Plot(fromCoin,toCoin,span,coinColor,depth,spot){
 		line2.position.set(-30/scaler,0,-14/scaler);
 		scene.add(line2);
 		
-		COIN.Text(fromCoin,coinColor);
+		COIN.Text(fromCoin,coinColor,7);
 		coin.position.set(depth,12/scaler+height,depth-140);
 		coinSet[spot] = coin;
+		
 	}
 	request.send();
 	/*
@@ -411,12 +414,41 @@ function Plot(fromCoin,toCoin,span,coinColor,depth,spot){
 	*/
 	
 }
-
-COIN.Text	= function(text, cColor, options){
+function Axes(yPosition,title){
+	var scaler = 0.1;
+	for(k=0;k<=60;k++){
+		if(k%10==0)
+			COIN.Text(k,'white',5);
+		else
+			COIN.Text(k,'white',3);
+		coin.position.set((30-k)/scaler,yPosition/scaler,40);
+		xAxisSet[k];
+	}
+	COIN.Text(title,'white',10);
+	coin.position.set(-34/scaler,(yPosition+3)/scaler,40);
+	xAxisSet[61];
+	COIN.Text(title,'white',10);
+	coin.position.set(34/scaler,(yPosition+3)/scaler,40);
+	xAxisSet[62];
+	
+	var today = new Date();
+	COIN.Text(MonthArray[today.getMonth()]+' '+today.getDate(),'white',5);
+	coin.position.set(30/scaler,(yPosition-1)/scaler,40);
+	xAxisSet[63];
+	today.setDate(today.getDate()-30);
+	COIN.Text(MonthArray[today.getMonth()]+' '+today.getDate(),'white',5);
+	coin.position.set(0,(yPosition-1)/scaler,40);
+	xAxisSet[63];
+	today.setDate(today.getDate()-30);
+	COIN.Text(MonthArray[today.getMonth()]+' '+today.getDate(),'white',5);
+	coin.position.set(-30/scaler,(yPosition-1)/scaler,40);
+	xAxisSet[63];
+}
+COIN.Text	= function(text, cColor, size,options){
 options	= options || {
 		font		: "gentilis",
 		weight		: "bold",
-		size		: 5,
+		size		: size,
 		height		: 0.001,
 	}
 

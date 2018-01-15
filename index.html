@@ -37,7 +37,7 @@
 				container3d = document.createElement( 'div' );
 				document.body.appendChild( container3d );
 				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
-				camera.position.z = 400;
+				camera.position.z = 500;
 				camera.position.y = 0;
 				// scene
 				scene = new THREE.Scene();
@@ -64,6 +64,8 @@
 				Plot('ADA','USD','hour',0x40e0d0,160);
 				Plot('NEO','USD','hour',0x00ff00,180);
 				
+				Axes(-1,'Hours');
+				Axes(-16,'Days');
 				//Plot('TRX','USD','green',140);
 				//Plot('XRB','USD','red',160);
 				
