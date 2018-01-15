@@ -467,28 +467,29 @@ function HourAxes(yPosition){
 
 function DayAxes(yPosition){
 	var scaler = 0.1;
-	var today = new Date();
 	for(k=0;k<=60;k++){
-		if(k%10==0)
-			COIN.Text(k,'white',5);
+		var today = new Date();
+		today.setDate(new Date().getDate()-k);
+		if(today.getDate()%5==0)
+			COIN.Text(today.getDate(),'white',5);
 		else
-			COIN.Text(k,'white',3);
+			COIN.Text(today.getDate(),'white',3);
 		coin.position.set((30-k)/scaler,yPosition/scaler,40);
+		if(today.getDate()==1){
+			COIN.Text(MonthArray[today.getMonth()],'white',5);
+			coin.position.set((30-k)/scaler,(yPosition-2)/scaler,40);
+		}
+			
 	}
 	COIN.Text('Days','white',10);
 	coin.position.set(-34/scaler,(yPosition+3)/scaler,40);
 	COIN.Text('Days','white',10);
 	coin.position.set(34/scaler,(yPosition+3)/scaler,40);
 	
-	
+	today = new Date();
 	COIN.Text(MonthArray[today.getMonth()]+' '+today.getDate(),'white',5);
 	coin.position.set(30/scaler,(yPosition-1)/scaler,40);
 	today.setDate(today.getDate()-30);
-	COIN.Text(MonthArray[today.getMonth()]+' '+today.getDate(),'white',5);
-	coin.position.set(0,(yPosition-1)/scaler,40);
-	today.setDate(today.getDate()-30);
-	COIN.Text(MonthArray[today.getMonth()]+' '+today.getDate(),'white',5);
-	coin.position.set(-30/scaler,(yPosition-1)/scaler,40);
 	
 
 	
