@@ -17,6 +17,7 @@
 		<script src="ext/Detector.js"></script>
 		<script src="ext/stats.min.js"></script>
 		<script src="ext/smooth.js"></script> 
+		<script src="ext/UserInput.js"></script> 
 		<script src="text/threex.text.js"></script>
 		<script src="text/gentilis_bold.typeface.js"></script>
 		
@@ -24,7 +25,7 @@
 		<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
 		<script>
 		var camera, scene, renderer, controls;
-		var geometry, material, mesh;
+		var geometry, material, mesh,gaze=0,shift=0;
 		var mouseX = 0, mouseY = 0, scrunch = 40;
 		var windowHalfX = window.innerWidth / 2;
 		var windowHalfY = window.innerHeight / 2;
@@ -42,7 +43,7 @@
 				// scene
 				scene = new THREE.Scene();
 				scene.background = new THREE.Color( 0xff0000 );
-				//controls = new THREE.OrbitControls( camera );
+				controls = new THREE.OrbitControls( camera );
 				var ambientLight = new THREE.AmbientLight( 0xcccccc, 1 );
 				scene.add( ambientLight );
 				var pointLight = new THREE.PointLight( 0xcccccc, 0.8 );
@@ -64,6 +65,14 @@
 				Plot('ADA','USD','hour',0x40e0d0,160);
 				Plot('NEO','USD','hour',0x00ff00,180);
 				
+				Plot('BTC','USD','minute','gold',80);
+				Plot('ETH','USD','minute','gray',100);
+				Plot('XRP','USD','minute',0x40a0e0,120);
+				Plot('BCH','USD','minute',0x00aa00,140);
+				Plot('ADA','USD','minute',0x40e0d0,160);
+				Plot('NEO','USD','minute',0x00ff00,180);
+				
+				MinuteAxes(14);
 				HourAxes(-1);
 				DayAxes(-16);
 				//Plot('TRX','USD','green',140);
@@ -93,7 +102,7 @@
 				container3d.appendChild( renderer.domElement );
 				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 				//
-				window.addEventListener( 'resize', onWindowResize, false );
+				window.addEventListener( 'keydown', Keyboard, false );
 
 			}
 			function onWindowResize() {
@@ -103,21 +112,43 @@
 				camera.updateProjectionMatrix();
 				renderer.setSize( window.innerWidth, window.innerHeight );
 			}
+			
 			function onDocumentMouseMove( event ) {
-				mouseX = ( event.clientX - windowHalfX ) / 2;
-				mouseY = ( event.clientY - windowHalfY ) / 2;
+				mouseX = ( event.clientX - windowHalfX ) ;
+				mouseY = ( event.clientY - windowHalfY ) -gaze;
 			}
 			
+			function Keyboard(event){
+				if(event.keyCode==38||event.keyCode == 87){
+					gaze+=150;
+					camera.position.y += 150;
+				}
+				else if(event.keyCode==40||event.keyCode == 83){
+					gaze-=150;
+					camera.position.y -= 150;
+				}
+				
+			}
 			function animate() {
 				requestAnimationFrame( animate );
-				//controls.update();
+				controls.update();
 				render();
 			}
 			function render() {
 				camera.position.x += ( mouseX - camera.position.x ) * .05;
 				camera.position.y += ( - mouseY - camera.position.y ) * .05;
+
+				if( keyboard.pressed("A") ){
+					shift--;
+					camera.position.x--;
+				}
+				
+				if( keyboard.pressed("D") ){
+					shift++;
+					camera.position.x ++;
+				}
 			
-				camera.lookAt( scene.position );
+				camera.lookAt( new THREE.Vector3(scene.position.x+shift,scene.position.y+gaze,scene.position.z) );
 				renderer.render( scene, camera );
 			}
 		
