@@ -5,11 +5,13 @@ var YEAR	= YEAR	|| {}
 var MONTH	= MONTH	|| {}
 var DAY	= DAY	|| {}
 var HOUR	= HOUR	|| {}
+var COIN	= COIN	|| {}
 var NAME	= NAME	|| {}
 var BUTTON	= BUTTON	|| {}
 var monthText = [];
 var houseText = [];
 hourSet = [];
+coinSet = [];
 var daySet = [];
 var mox = [];
 var moy = [];
@@ -342,9 +344,106 @@ function LAMDENlogo(){
 }
 
 
+function Plot(fromCoin,toCoin,span,coinColor,depth,spot){	
+	var y=[];
+	var height;
+	var request = new XMLHttpRequest();
+	request.open('GET','https://min-api.cryptocompare.com/data/histo'+span+'?fsym='+fromCoin+'&tsym='+toCoin+'&limit=60&aggregate=3&e=CCCAGG');
+	request.onload = function(){
+		var data = JSON.parse(request.responseText);
+		console.log(data.Data.length);
+		console.log(data.Data);
+		var scaler = 0.1;
+		if(span == 'day')
+			height = -140;
+		else if(span=='hour')
+			height = 0;
+		else if(span=='minute')
+			height = 140;
+		for (i=0;i<data.Data.length;i++){
+			y[i] = data.Data[i].close;
+			Candle(i/scaler,data.Data[i].open,data.Data[i].close,data.Data[i].high,data.Data[i].low,height,depth,scaler,Math.max.apply(Math,y));
+		}
+		console.log(y);
+		var geometry = new THREE.Geometry();
+		var start = y[0];
+		var end = y.length;
+		console.log(Math.min.apply(Math,y));
 
 
+		for (j=0;j<y.length;j++){
+			geometry.vertices.push(new THREE.Vector3(j/scaler,y[j]/scaler/Math.max.apply(Math,y)*10+height,depth));
+			
+		}
+		var material = new THREE.LineBasicMaterial({color: coinColor });
+		var line = new THREE.Line(geometry, material);
+		line.position.set(-30/scaler,0,-14/scaler);
+		scene.add(line);
+		
+		var geometry2 = new THREE.Geometry();
+		geometry2.vertices.push(new THREE.Vector3((end+1)/scaler,0+height,depth));
+		geometry2.vertices.push(new THREE.Vector3(0,0+height,depth));
+		geometry2.vertices.push(new THREE.Vector3(0,11/scaler+height,depth));
+		geometry2.vertices.push(new THREE.Vector3((end+1)/scaler,11/scaler+height,depth));
+		geometry2.vertices.push(new THREE.Vector3((end+1)/scaler,0+height,depth));
+		var material2 = new THREE.LineBasicMaterial({color: 'white' });
+		var line2 = new THREE.Line(geometry2, material2);
+		line2.position.set(-30/scaler,0,-14/scaler);
+		scene.add(line2);
+		
+		COIN.Text(fromCoin,coinColor);
+		coin.position.set(depth,12/scaler+height,depth-140);
+		coinSet[spot] = coin;
+	}
+	request.send();
+	/*
+	var arr_from_json ='https://min-api.cryptocompare.com/data/histominute?fsym=BTC&tsym=USD&limit=60&aggregate=3&e=EtherDelta';
+	var y;
+	$.ajax({
+		method: 'GET',
+		url: arr_from_json,
+	  }).done(function(data) {
+		  for (i=0;i<=data.length;i++){
+			  y[i] = data[i].close;
+		  }
+	  });
+	
+	*/
+	
+}
 
+COIN.Text	= function(text, cColor, options){
+options	= options || {
+		font		: "gentilis",
+		weight		: "bold",
+		size		: 5,
+		height		: 0.001,
+	}
+
+	// create the tGeometry
+	var geometry	= new THREE.TextGeometry(text, options);
+
+	// center the geometry
+	// - THREE.TextGeometry isnt centered for unknown reasons. all other geometries are centered
+	geometry.computeBoundingBox();
+	var center	= new THREE.Vector3();
+	center.x	= (geometry.boundingBox.max.x - geometry.boundingBox.min.x) / 2;
+	center.y	= (geometry.boundingBox.max.y - geometry.boundingBox.min.y) / 2;
+	center.z	= (geometry.boundingBox.max.z - geometry.boundingBox.min.z) / 2;
+	geometry.vertices.forEach(function(vertex){
+		vertex.sub(center);
+	})
+	
+	// create a mesh with it
+	var material	= new THREE.MeshBasicMaterial({color:cColor});
+	coin	= new THREE.Mesh(geometry, material);
+	
+	// return mesh
+	scene.add(coin);
+	// EarthScene.rotation.y = (3+currentDate.getHours())/24*Math.PI;
+	// EarthScene.rotation.x = planetX[2]*23.5*Math.PI/180*Math.PI*i/24;
+	// EarthScene.position.set(planetX[2],0,planetZ[2]);
+}
 
 
 
@@ -442,69 +541,7 @@ function spiralPlot(SD, title, colour, y) {
 	// NAME.Text(start, colour,  radius*0.75*Math.sin(start*360/24/60*Math.PI/180-Math.PI),radius*0.75*Math.cos(start*360/24/60*Math.PI/180+Math.PI),-(start*scrunch)/24/60);
 	
 }
-function Plot(fromCoin,toCoin,span,coinColor,depth){	
-	var y=[];
-	var height;
-	var request = new XMLHttpRequest();
-	request.open('GET','https://min-api.cryptocompare.com/data/histo'+span+'?fsym='+fromCoin+'&tsym='+toCoin+'&limit=60&aggregate=3&e=CCCAGG');
-	request.onload = function(){
-		var data = JSON.parse(request.responseText);
-		console.log(data.Data.length);
-		console.log(data.Data);
-		var scaler = 0.1;
-		if(span == 'day')
-			height = -120;
-		else if(span=='hour')
-			height = 0;
-		else if(span=='minute')
-			height = 120;
-		for (i=0;i<data.Data.length;i++){
-			y[i] = data.Data[i].close;
-			Candle(i/scaler,data.Data[i].open,data.Data[i].close,data.Data[i].high,data.Data[i].low,height,depth,scaler,Math.max.apply(Math,y));
-		}
-		console.log(y);
-		var geometry = new THREE.Geometry();
-		var start = y[0];
-		var end = y.length;
-		console.log(Math.min.apply(Math,y));
 
-
-		for (j=0;j<y.length;j++){
-			geometry.vertices.push(new THREE.Vector3(j/scaler,y[j]/scaler/Math.max.apply(Math,y)*10+height,depth));
-			
-		}
-		var material = new THREE.LineBasicMaterial({color: coinColor });
-		var line = new THREE.Line(geometry, material);
-		line.position.set(-30/scaler,0,-14/scaler);
-		scene.add(line);
-		
-		var geometry2 = new THREE.Geometry();
-		geometry2.vertices.push(new THREE.Vector3((end+1)/scaler,0+height,depth));
-		geometry2.vertices.push(new THREE.Vector3(0,0+height,depth));
-		geometry2.vertices.push(new THREE.Vector3(0,11/scaler+height,depth));
-		geometry2.vertices.push(new THREE.Vector3((end+1)/scaler,11/scaler+height,depth));
-		geometry2.vertices.push(new THREE.Vector3((end+1)/scaler,0+height,depth));
-		var material2 = new THREE.LineBasicMaterial({color: 'white' });
-		var line2 = new THREE.Line(geometry2, material2);
-		line2.position.set(-30/scaler,0,-14/scaler);
-		scene.add(line2);
-	}
-	request.send();
-	/*
-	var arr_from_json ='https://min-api.cryptocompare.com/data/histominute?fsym=BTC&tsym=USD&limit=60&aggregate=3&e=EtherDelta';
-	var y;
-	$.ajax({
-		method: 'GET',
-		url: arr_from_json,
-	  }).done(function(data) {
-		  for (i=0;i<=data.length;i++){
-			  y[i] = data[i].close;
-		  }
-	  });
-	
-	*/
-	
-}
 
 function Candle(xAxis,open,close,high,low,height,depth,scaler,max){
 	var geometry1 = new THREE.Geometry();
