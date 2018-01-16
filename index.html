@@ -37,7 +37,7 @@
 
 				container3d = document.createElement( 'div' );
 				document.body.appendChild( container3d );
-				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
+				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 4000 );
 				camera.position.z = 500;
 				camera.position.y = 0;
 				// scene
@@ -79,7 +79,7 @@
 				//Plot('XRB','USD','red',160);
 				
 				// CREATE STARFIELD AROUND SCENE
-				var geometry  = new THREE.SphereGeometry(1000, 32, 32);
+				var geometry  = new THREE.SphereGeometry(2000, 32, 32);
 				var material  = new THREE.MeshLambertMaterial();
 				material.map   = THREE.ImageUtils.loadTexture('img/bkg2.jpg');			//eso_28.png
 				material.fog = false;

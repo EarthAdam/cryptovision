@@ -464,7 +464,6 @@ function HourAxes(yPosition){
 	coin.position.set(30/scaler,(yPosition-1)/scaler,40);
 	
 }
-
 function DayAxes(yPosition){
 	var scaler = 0.1;
 	for(k=0;k<=60;k++){
