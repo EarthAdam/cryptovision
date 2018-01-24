@@ -346,16 +346,20 @@ function LAMDENlogo(){
 }
 
 
-function Plot(fromCoin,toCoin,span,coinColor,depth,spot){	
+function CryptoComparePlot(fromCoin,toCoin,span,coinColor,depth,spot){	
 	var y=[];
 	var height;
 	var request = new XMLHttpRequest();
 	request.open('GET','https://min-api.cryptocompare.com/data/histo'+span+'?fsym='+fromCoin+'&tsym='+toCoin+'&limit=60&aggregate=3&e=CCCAGG');
 	request.onload = function(){
 		var data = JSON.parse(request.responseText);
-		console.log(data.Data.length);
-		console.log(data.Data);
+		//console.log(data.Data.length);
+		//console.log(data.Data);
 		var scaler = 0.1;
+		//for (i=1;i<data.Data.length;i++){
+		//	if(data.Data[i].close>max)
+		//		max = data.Data[i];
+		//}
 		if(span == 'day')
 			height = -150;
 		else if(span=='hour')
@@ -364,6 +368,8 @@ function Plot(fromCoin,toCoin,span,coinColor,depth,spot){
 			height = 150;
 		for (i=0;i<data.Data.length;i++){
 			y[i] = data.Data[i].close;
+		}
+		for (i=0;i<data.Data.length;i++){
 			Candle(i/scaler,data.Data[i].open,data.Data[i].close,data.Data[i].high,data.Data[i].low,height,depth,scaler,Math.max.apply(Math,y));
 		}
 		console.log(y);
@@ -375,7 +381,6 @@ function Plot(fromCoin,toCoin,span,coinColor,depth,spot){
 
 		for (j=0;j<y.length;j++){
 			geometry.vertices.push(new THREE.Vector3(j/scaler,y[j]/scaler/Math.max.apply(Math,y)*10+height,depth));
-			
 		}
 		var material = new THREE.LineBasicMaterial({color: coinColor });
 		var line = new THREE.Line(geometry, material);
@@ -395,6 +400,72 @@ function Plot(fromCoin,toCoin,span,coinColor,depth,spot){
 		
 		COIN.Text(fromCoin,coinColor,7);
 		coin.position.set(depth,12/scaler+height,depth-140);
+		coinSet[spot] = coin;
+		
+	}
+	request.send();
+	/*
+	var arr_from_json ='https://min-api.cryptocompare.com/data/histominute?fsym=BTC&tsym=USD&limit=60&aggregate=3&e=EtherDelta';
+	var y;
+	$.ajax({
+		method: 'GET',
+		url: arr_from_json,
+	  }).done(function(data) {
+		  for (i=0;i<=data.length;i++){
+			  y[i] = data[i].close;
+		  }
+	  });
+	
+	*/
+	
+}
+
+function PoloniexPlot(fromCoin,toCoin,coinColor,depth,spot){	
+	var y=[];
+	var height=0;
+	var request = new XMLHttpRequest();
+	request.open('GET','https://poloniex.com/public?command=returnChartData&currencyPair='+fromCoin+'_'+toCoin+'&start=1512086400&end=9999999999&period=86400');
+	request.onload = function(){
+		var data = JSON.parse(request.responseText);
+		console.log(data.length);
+		console.log(data);
+		var xScaler = 0.1;
+		var yScaler = 0.1;
+		for (i=0;i<data.length;i++){
+			y[i] = data[i].close;
+		}
+		for (i=0;i<data.length;i++){
+			Candle(i/xScaler,data[i].open,data[i].close,data[i].high,data[i].low,height,depth,yScaler,Math.max.apply(Math,y));
+		}
+		console.log(Math.max.apply(Math,data.close));
+		var geometry = new THREE.Geometry();
+		var start = y[0];
+		var end = y.length;
+		console.log(Math.min.apply(Math,y));
+
+
+		for (j=0;j<y.length;j++){
+			geometry.vertices.push(new THREE.Vector3(j/xScaler,y[j]/yScaler/Math.max.apply(Math,y)*10+height,depth));
+			
+		}
+		var material = new THREE.LineBasicMaterial({color: coinColor });
+		var line = new THREE.Line(geometry, material);
+		line.position.set(-30/yScaler,0,-14/yScaler);
+		scene.add(line);
+		
+		var geometry2 = new THREE.Geometry();
+		geometry2.vertices.push(new THREE.Vector3((end+1)/xScaler,0+height,depth));
+		geometry2.vertices.push(new THREE.Vector3(0,0+height,depth));
+		geometry2.vertices.push(new THREE.Vector3(0,11/yScaler+height,depth));
+		geometry2.vertices.push(new THREE.Vector3((end+1)/xScaler,11/yScaler+height,depth));
+		geometry2.vertices.push(new THREE.Vector3((end+1)/xScaler,0+height,depth));
+		var material2 = new THREE.LineBasicMaterial({color: 'white' });
+		var line2 = new THREE.Line(geometry2, material2);
+		line2.position.set(-30/yScaler,0,-14/yScaler);
+		scene.add(line2);
+		
+		COIN.Text(toCoin,coinColor,7);
+		coin.position.set(depth,12/yScaler+height,depth-140);
 		coinSet[spot] = coin;
 		
 	}
@@ -639,7 +710,7 @@ function Candle(xAxis,open,close,high,low,height,depth,scaler,max){
 	}
 	
 	var thinLine = new THREE.Line(geometry1, material);
-	thinLine.position.set(-30/scaler,-(high-(high-low)/2)/scaler/max*10,-14/scaler);
+	thinLine.position.set(-30/scaler,0,-14/scaler);
 	scene.add(thinLine);
 	
 	var geometry2 = new THREE.Geometry();
@@ -653,7 +724,7 @@ function Candle(xAxis,open,close,high,low,height,depth,scaler,max){
 	material.linewidth=20;
 	
 	var thickLine = new THREE.Line(geometry2, material);
-	thickLine.position.set(-30/scaler,-(open-(open-close)/2)/scaler/max*10,-14/scaler);
+	thickLine.position.set(-30/scaler,0,-14/scaler);
 	scene.add(thickLine);
 }
 function closeFrame(SD, ED, color_of_day) {
