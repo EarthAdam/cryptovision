@@ -639,7 +639,7 @@ function Candle(xAxis,open,close,high,low,height,depth,scaler,max){
 	}
 	
 	var thinLine = new THREE.Line(geometry1, material);
-	thinLine.position.set(-30/scaler,-(high-(high-low)/2)/scaler/max*10,-14/scaler);
+	thinLine.position.set(-30/scaler,0,-14/scaler);
 	scene.add(thinLine);
 	
 	var geometry2 = new THREE.Geometry();
