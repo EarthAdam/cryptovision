@@ -111,7 +111,7 @@
 				container3d.appendChild( renderer.domElement );
 				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 				//
-				window.addEventListener( 'keydown', Keyboard, false );
+				//window.addEventListener( 'keydown', Keyboard, false );
 
 			}
 			function onWindowResize() {
@@ -126,7 +126,7 @@
 				mouseX = ( event.clientX - windowHalfX ) ;
 				mouseY = ( event.clientY - windowHalfY ) -gaze;
 			}
-			
+			/*
 			function Keyboard(event){
 				if(event.keyCode==38||event.keyCode == 87){
 					gaze+=150;
@@ -137,7 +137,7 @@
 					camera.position.y -= 150;
 				}
 				
-			}
+			}*/
 			function animate() {
 				requestAnimationFrame( animate );
 				controls.update();
@@ -147,11 +147,18 @@
 				camera.position.x += ( mouseX - camera.position.x ) * .05;
 				camera.position.y += ( - mouseY - camera.position.y ) * .05;
 
+				if( keyboard.pressed("W") ){
+					gaze++;
+					camera.position.y++;
+				}
 				if( keyboard.pressed("A") ){
 					shift--;
 					camera.position.x--;
 				}
-				
+				if( keyboard.pressed("S") ){
+					gaze--;
+					camera.position.y--;
+				}
 				if( keyboard.pressed("D") ){
 					shift++;
 					camera.position.x ++;
