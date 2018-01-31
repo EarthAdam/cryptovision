@@ -50,27 +50,36 @@
 				camera.add( pointLight );
 				scene.add( camera );
 				
-				Plot('BTC','USD','day','gold',80,6);
-				Plot('ETH','USD','day','gray',100,5);
-				Plot('XRP','USD','day',0x40a0e0,120,4);
-				Plot('BCH','USD','day',0x00aa00,140,3);
-				Plot('ADA','USD','day',0x40e0d0,160,2);
-				Plot('NEO','USD','day',0x00ff00,180,1);
-				//Plot('TAU','BTC','day',0xff00ff,200,0);
+				//PoloniexPlot('BTC','ETH','gold',80,6);
+				//PoloniexPlot('BTC','XMR','gray',100,5);
+				/*
+				PoloniexPlot('BTC','XRP',0x40a0e0,120,4);
+				PoloniexPlot('BTC','BCH',0x00aa00,140,3);
+				PoloniexPlot('BTC','BBR',0x40e0d0,160,2);
+				PoloniexPlot('BTC','LTC',0x00ff00,180,1);
+				PoloniexPlot('BTC','NXT',0x00ff00,200,0);
+				*/
+				CryptoComparePlot('BTC','USD','day','gold',80,5);
+				CryptoComparePlot('ETH','USD','day','gray',100,5);
+				CryptoComparePlot('XRP','USD','day',0x40a0e0,120,4);
+				CryptoComparePlot('BCH','USD','day',0x00aa00,140,3);
+				CryptoComparePlot('ADA','USD','day',0x40e0d0,160,2);
+				CryptoComparePlot('NEO','USD','day',0x00ff00,180,1);
+				//CryptoComparePlot('TAU','BTC','day',0xff00ff,200,0);
 				
-				Plot('BTC','USD','hour','gold',80);
-				Plot('ETH','USD','hour','gray',100);
-				Plot('XRP','USD','hour',0x40a0e0,120);
-				Plot('BCH','USD','hour',0x00aa00,140);
-				Plot('ADA','USD','hour',0x40e0d0,160);
-				Plot('NEO','USD','hour',0x00ff00,180);
+				CryptoComparePlot('BTC','USD','hour','gold',80);
+				CryptoComparePlot('ETH','USD','hour','gray',100);
+				CryptoComparePlot('XRP','USD','hour',0x40a0e0,120);
+				CryptoComparePlot('BCH','USD','hour',0x00aa00,140);
+				CryptoComparePlot('ADA','USD','hour',0x40e0d0,160);
+				CryptoComparePlot('NEO','USD','hour',0x00ff00,180);
 				
-				Plot('BTC','USD','minute','gold',80);
-				Plot('ETH','USD','minute','gray',100);
-				Plot('XRP','USD','minute',0x40a0e0,120);
-				Plot('BCH','USD','minute',0x00aa00,140);
-				Plot('ADA','USD','minute',0x40e0d0,160);
-				Plot('NEO','USD','minute',0x00ff00,180);
+				CryptoComparePlot('BTC','USD','minute','gold',80);
+				CryptoComparePlot('ETH','USD','minute','gray',100);
+				CryptoComparePlot('XRP','USD','minute',0x40a0e0,120);
+				CryptoComparePlot('BCH','USD','minute',0x00aa00,140);
+				CryptoComparePlot('ADA','USD','minute',0x40e0d0,160);
+				CryptoComparePlot('NEO','USD','minute',0x00ff00,180);
 				
 				MinuteAxes(14);
 				HourAxes(-1);
